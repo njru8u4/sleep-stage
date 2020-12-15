@@ -19,7 +19,7 @@ def read_stage(path):
         if counter >= 3:
             j = i + 2
             lines[j] = lines[j].split('\n')[0]
-            temp = (re.split(',\t\t|,\s\t|,\t|,\t', lines[j]))
+            temp = (re.split(r',\t\t|,\s\t|,\t|,\t', lines[j]))
             anns.append(temp)
             
     anns = np.array(anns)
@@ -116,8 +116,6 @@ PPG = np.array(PPG).reshape(len(PPG), len(PPG[0]), 1)
 label = np.array(label)
 stage_counts = np.array(stage_counts)
 
-#np.savetxt('./datas/all_stages.csv', stage_counts, delimiter=",")
-
 from sklearn.preprocessing import OneHotEncoder
 for i in range(len(PPG)):
     if len(PPG[i]) != rate*30*5:
@@ -135,29 +133,3 @@ label = onehotencoder.fit_transform(label).toarray()
 print (label.shape)
 np.save('./datas/PPG-5-150s-mid-all', PPG)
 np.save('./datas/label-5-150s-mid-all', label)
-#np.savetxt('PPG-5.csv', PPG, delimiter=',')
-#np.savetxt('label-5.csv', label, fmt="%d",delimiter=',')
-
-"""
-from scipy.signal import find_peaks
-from scipy import interpolate
-import matplotlib.pyplot as plt
-
-interval = []
-sx = np.arange(0, 3750)
-#print (PPG_.shape)
-for i in range(PPG.shape[0]):
-    peaks, loca = find_peaks(PPG[i,:], distance=40, height=1, width=20)
-    distance = peaks[1:-1] - peaks[0:-2]
-    distance = np.array(distance)
-    #func1 = interpolate.UnivariateSpline(peaks[1:-1], distance, s=0)
-    #sy = func1(sx)
-    distance = np.concatenate((label[i], distance))
-    interval.append(distance)
-#inter = np.array(interval)
-#np.savetxt('inter.csv', inter, fmt="%d", delimiter=',')
-import csv
-with open('inter1.csv', 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile)
-    writer.writerows(interval)
-"""
